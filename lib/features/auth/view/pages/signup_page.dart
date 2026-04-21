@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/src/framework.dart';
 
 import '../../../../core/constants/custom_field.dart';
 import '../../../../core/theme/app_pallete.dart';
+import '../../../../core/utils/loader.dart';
+import '../../../../core/utils/utils.dart';
+import '../../viewmodel/auth_viewmodel.dart';
 import '../widgets/auth_button.dart';
 import 'login_page.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -28,10 +33,10 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading =ref.watch(authViewModelProvider)?.isLoading==true;
     return Scaffold(
       appBar: AppBar(),
-
-      body: Padding(
+      body:isLoading?const Loader(): Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
           key: formKey,
@@ -55,7 +60,17 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 20),
               AuthGradientButton(
                 buttonText: 'Sign up',
-                onTap: ()  {
+                onTap: () async {
+                  if (formKey.currentState!.validate()) {
+                    await ref
+                        .read(authViewModelProvider.notifier)
+                        .loginUser(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                  } else {
+                    showSnackBar(context, 'Missing fields!');
+                  }
                 },
               ),
               const SizedBox(height: 20),
