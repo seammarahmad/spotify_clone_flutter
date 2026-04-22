@@ -24,3 +24,9 @@ plugins {
 }
 
 include(":app")
+include(":app")
+include(":app")
+include(":app")
+include(":app")
+include(":app")
+include(":app")

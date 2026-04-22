@@ -17,7 +17,7 @@ class AuthRemoteRepository {
     try {
       final response = await http.post(
         Uri.parse(
-          '${ServerConstant.serverURL}/auth/signup',
+          '${ServerConstant.serverURL}/signup',
         ),
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ class AuthRemoteRepository {
     try {
       final response = await http.post(
         Uri.parse(
-          '${ServerConstant.serverURL}/auth/login',
+          '${ServerConstant.serverURL}/login',
         ),
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ class AuthRemoteRepository {
     try {
       final response = await http.get(
         Uri.parse(
-          '${ServerConstant.serverURL}/auth/',
+          '${ServerConstant.serverURL}/',
         ),
         headers: {
           'Content-Type': 'application/json',
