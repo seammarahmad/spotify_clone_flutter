@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -6,6 +7,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/constants/server_constants.dart';
 import '../../../core/models/user_model.dart';
 import '../../../core/utils/failure.dart';
+
+part 'auth_remote_repository.g.dart';
+
+@riverpod
+AuthRemoteRepository authRemoteRepository(Ref ref){
+  return AuthRemoteRepository();
+}
 
 
 class AuthRemoteRepository {
@@ -16,19 +24,9 @@ class AuthRemoteRepository {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse(
-          '${ServerConstant.serverURL}/signup',
-        ),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(
-          {
-            'name': name,
-            'email': email,
-            'password': password,
-          },
-        ),
+        Uri.parse('${ServerConstant.serverURL}/auth/signup'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'name': name, 'email': email, 'password': password}),
       );
       final resBodyMap = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -49,18 +47,9 @@ class AuthRemoteRepository {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse(
-          '${ServerConstant.serverURL}/login',
-        ),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(
-          {
-            'email': email,
-            'password': password,
-          },
-        ),
+        Uri.parse('${ServerConstant.serverURL}/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password}),
       );
       final resBodyMap = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -69,9 +58,9 @@ class AuthRemoteRepository {
       }
 
       return Right(
-        UserModel.fromMap(resBodyMap['user']).copyWith(
-          token: resBodyMap['token'],
-        ),
+        UserModel.fromMap(
+          resBodyMap['user'],
+        ).copyWith(token: resBodyMap['token']),
       );
     } catch (e) {
       return Left(AppFailure(e.toString()));
@@ -81,13 +70,8 @@ class AuthRemoteRepository {
   Future<Either<AppFailure, UserModel>> getCurrentUserData(String token) async {
     try {
       final response = await http.get(
-        Uri.parse(
-          '${ServerConstant.serverURL}/',
-        ),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token,
-        },
+        Uri.parse('${ServerConstant.serverURL}/auth'),
+        headers: {'Content-Type': 'application/json', 'x-auth-token': token},
       );
       final resBodyMap = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -95,12 +79,9 @@ class AuthRemoteRepository {
         return Left(AppFailure(resBodyMap['detail']));
       }
 
-      return Right(
-        UserModel.fromMap(resBodyMap).copyWith(
-          token: token,
-        ),
-      );
+      return Right(UserModel.fromMap(resBodyMap).copyWith(token: token));
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
-  }}
+  }
+}
