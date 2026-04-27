@@ -33,7 +33,23 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider.select((val)=>val?.isLoading==true));
+    bool validateForm(String email, String password) {
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (email.isEmpty || !emailRegex.hasMatch(email)) {
+        showSnackBar(context, "Please enter a valid email address");
+        return false;
+      }
+      if (password.isEmpty || password.length < 6) {
+        showSnackBar(context, "Password must be at least 6 characters long");
+        return false;
+      }
+      return true;
+    }
+
+    final isLoading = ref.watch(
+      authViewModelProvider.select((val) => val?.isLoading == true),
+    );
+
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
@@ -86,7 +102,11 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                       AuthGradientButton(
                         buttonText: 'Sign up',
                         onTap: () async {
-                          if (formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate() &&
+                              validateForm(
+                                emailController.text,
+                                passwordController.text,
+                              )) {
                             await ref
                                 .read(authViewModelProvider.notifier)
                                 .signUpUser(
@@ -95,7 +115,10 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                   name: nameController.text,
                                 );
 
-                            showSnackBar(context, 'Account Created Successfully');
+                            showSnackBar(
+                              context,
+                              'Account Created Successfully',
+                            );
                           } else {
                             showSnackBar(context, 'Missing fields!');
                           }

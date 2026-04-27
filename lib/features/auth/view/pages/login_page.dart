@@ -31,7 +31,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider.select((val)=>val?.isLoading==true));
+    bool validateForm(String email, String password) {
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (email.isEmpty || !emailRegex.hasMatch(email)) {
+        showSnackBar(context, "Please enter a valid email address");
+        return false;
+      }
+      if (password.isEmpty || password.length < 6) {
+        showSnackBar(context, "Password must be at least 6 characters long");
+        return false;
+      }
+      return true;
+    }
+
+    final isLoading = ref.watch(
+      authViewModelProvider.select((val) => val?.isLoading == true),
+    );
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
@@ -40,9 +55,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           //TODO navigate to home page
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ),
+            MaterialPageRoute(builder: (context) => const HomePage()),
           );
         },
         error: (error, st) {
@@ -104,7 +117,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       AuthGradientButton(
                         buttonText: 'Sign in',
                         onTap: () async {
-                          if (formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate() &&
+                              validateForm(
+                                emailController.text,
+                                passwordController.text,
+                              )) {
                             await ref
                                 .read(authViewModelProvider.notifier)
                                 .loginUser(
