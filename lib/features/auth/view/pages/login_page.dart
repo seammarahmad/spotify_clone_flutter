@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotify_clone_flutter/core/utils/loader.dart';
 import 'package:spotify_clone_flutter/features/auth/view/pages/signup_page.dart';
 import 'package:spotify_clone_flutter/features/home/view/pages/home_page.dart';
+import 'package:spotify_clone_flutter/features/home/view/pages/upload_song_page.dart';
 
 import '../../../../core/constants/custom_field.dart';
 import '../../../../core/theme/app_pallete.dart';
@@ -53,9 +54,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           showSnackBar(context, 'Login Succesfully');
 
           //TODO navigate to home page
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => const UploadSongPage()),
+            (_) => false,
           );
         },
         error: (error, st) {
