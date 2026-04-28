@@ -17,7 +17,7 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
   Widget build(BuildContext context) {
     final songNameController = TextEditingController();
     final artistNameController = TextEditingController();
-    var selectedColor=Pallete.cardColor;
+    var selectedColor = Pallete.cardColor;
 
     @override
     void dispose() {
@@ -27,7 +27,7 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Upload Song')),
+      appBar: AppBar(title: Text('Upload Song'), centerTitle: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -69,19 +69,20 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
               ),
 
               SizedBox(height: 20),
-              CustomField(hintText: 'Song Name', controller: songNameController),
+              CustomField(
+                hintText: 'Song Name',
+                controller: songNameController,
+              ),
 
               ColorPicker(
-                pickersEnabled: {
-                  ColorPickerType.wheel: true,
+                pickersEnabled: {ColorPickerType.wheel: true},
+                color: selectedColor,
+                onColorChanged: (Color color) {
+                  setState(() {
+                    selectedColor = color;
+                  });
                 },
-                  color: selectedColor,
-                  onColorChanged: (Color color){
-                setState(() {
-                  selectedColor=color;
-                });
-              }),
-
+              ),
             ],
           ),
         ),
