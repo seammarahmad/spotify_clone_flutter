@@ -8,7 +8,7 @@ import 'package:spotify_clone_flutter/features/auth/repositories/auth_remote_rep
 
 part 'auth_viewmodel.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AuthViewModel extends _$AuthViewModel {
   late AuthRemoteRepository _authRemoteRepository;
   late AuthLocalRepository _authLocalRepository;
@@ -18,10 +18,9 @@ class AuthViewModel extends _$AuthViewModel {
   AsyncValue<UserModel>? build() {
     _authRemoteRepository = ref.watch(authRemoteRepositoryProvider);
     _authLocalRepository = ref.watch(authLocalRepositoryProvider);
-    _currentUserNotifier=ref.watch(currentUserProvider.notifier);
+    _currentUserNotifier = ref.watch(currentUserProvider.notifier);
     return null;
   }
-
 
   Future<void> signUpUser({
     required String name,
@@ -60,26 +59,25 @@ class AuthViewModel extends _$AuthViewModel {
     };
   }
 
-
-  Future<UserModel?> getData() async{
-    state=const AsyncValue.loading();
-    final token= _authLocalRepository.getToken();
-    if(token!=null) {
+  Future<UserModel?> getData() async {
+    state = const AsyncValue.loading();
+    final token = _authLocalRepository.getToken();
+    if (token != null) {
       final res = await _authRemoteRepository.getCurrentUserData(token);
       final val = switch (res) {
-        Left(value: final l) =>
-        state = AsyncValue.error(
+        Left(value: final l) => state = AsyncValue.error(
           l.message,
           StackTrace.current,
         ),
-        Right(value: final r) =>_getDataSuccess(r),
+        Right(value: final r) => _getDataSuccess(r),
       };
       return val?.value;
     }
+    state = null;
     return null;
   }
 
-///Supportive Functions for the right in the login ad get data
+  ///Supportive Functions for the right in the login ad get data
   AsyncValue<UserModel>? _loginSuccess(UserModel user) {
     _authLocalRepository.setToken(user.token);
     _currentUserNotifier.addUser(user);
@@ -94,5 +92,4 @@ class AuthViewModel extends _$AuthViewModel {
   Future<void> initSharedPreferences() async {
     await _authLocalRepository.init();
   }
-
 }

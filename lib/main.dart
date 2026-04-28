@@ -7,12 +7,12 @@ import 'package:spotify_clone_flutter/features/auth/viewmodel/auth_viewmodel.dar
 
 import 'features/home/view/pages/home_page.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer();
   final notifier = container.read(authViewModelProvider.notifier);
-  notifier.initSharedPreferences();
-  notifier.getData();
+  await notifier.initSharedPreferences();
+  await notifier.getData();
   runApp(UncontrolledProviderScope(container: container, child: MyApp()));
 }
 
