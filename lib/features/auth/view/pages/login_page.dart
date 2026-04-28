@@ -127,7 +127,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             await ref
                                 .read(authViewModelProvider.notifier)
                                 .loginUser(
-                                  email: emailController.text,
+                                  email: emailController.text.toLowerCase(),
                                   password: passwordController.text,
                                 );
                           } else {

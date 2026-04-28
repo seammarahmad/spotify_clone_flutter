@@ -110,7 +110,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                             await ref
                                 .read(authViewModelProvider.notifier)
                                 .signUpUser(
-                                  email: emailController.text,
+                                  email: emailController.text.toLowerCase(),
                                   password: passwordController.text,
                                   name: nameController.text,
                                 );
