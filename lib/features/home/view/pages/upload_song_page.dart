@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotify_clone_flutter/core/constants/custom_field.dart';
 import 'package:spotify_clone_flutter/core/theme/app_pallete.dart';
+import 'package:spotify_clone_flutter/core/utils/utils.dart';
+import 'package:spotify_clone_flutter/features/home/view/widgets/audio_wave.dart';
 
 class UploadSongPage extends ConsumerStatefulWidget {
   const UploadSongPage({super.key});
@@ -13,55 +16,165 @@ class UploadSongPage extends ConsumerStatefulWidget {
 }
 
 class _UploadSongPageState extends ConsumerState<UploadSongPage> {
+  final songNameController = TextEditingController();
+  final artistNameController = TextEditingController();
+  Color selectedColor = Pallete.cardColor;
+  File? selectedImage;
+  File? selectedAudio;
+
+  Future<void> selectImage() async {
+    final pickedImage = await pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        selectedImage = pickedImage;
+      });
+    }
+  }
+
+  void removeImage() {
+    setState(() {
+      selectedImage = null;
+    });
+  }
+
+  void removeAudio() {
+    setState(() {
+      selectedAudio = null;
+    });
+  }
+
+  Future<void> selectAudio() async {
+    final pickedAudio = await pickAudio();
+    if (pickedAudio != null) {
+      setState(() {
+        selectedAudio = pickedAudio;
+      });
+    }
+  }
+
+  Future<void> changeAudio() async {
+    removeAudio();
+    selectAudio();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    artistNameController.dispose();
+    songNameController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final songNameController = TextEditingController();
-    final artistNameController = TextEditingController();
-    var selectedColor = Pallete.cardColor;
-
-    @override
-    void dispose() {
-      super.dispose();
-      artistNameController.dispose();
-      songNameController.dispose();
-    }
-
     return Scaffold(
-      appBar: AppBar(title: Text('Upload Song'), centerTitle: true),
+      backgroundColor: Pallete.backgroundColor,
+      appBar: AppBar(
+        title: Text('Upload Song', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              print("Pressed the button");
+            },
+            icon: Icon(Icons.check, color: Colors.white),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
             children: [
-              DottedBorder(
-                options: RectDottedBorderOptions(
-                  dashPattern: [10, 4],
-                  strokeWidth: 2,
-                  color: Pallete.borderColor,
-                ),
-                child: SizedBox(
-                  height: 160,
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.folder_open, size: 50),
-                      SizedBox(height: 20),
-                      Text(
-                        'Select the Thumbnail for your song',
-                        style: TextStyle(fontSize: 15),
+              GestureDetector(
+                onTap: selectImage,
+                onLongPress: removeImage,
+                child: selectedImage != null
+                    ? SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(
+                            selectedImage!,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      )
+                    : DottedBorder(
+                        options: RectDottedBorderOptions(
+                          dashPattern: [10, 4],
+                          strokeWidth: 2,
+                          color: Pallete.borderColor,
+                        ),
+                        child: SizedBox(
+                          height: 160,
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.folder_open, size: 50),
+                              SizedBox(height: 20),
+                              Text(
+                                'Select the Thumbnail for your song',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                ),
               ),
               SizedBox(height: 20),
-              CustomField(
-                hintText: 'Pick From Device',
-                controller: null,
-                readOnly: true,
-                onTap: () {},
-              ),
+
+              selectedAudio != null
+                  ? AudioWave(path: selectedAudio!.path, color: selectedColor)
+                  : CustomField(
+                      hintText: 'Pick Song From Device',
+                      controller: null,
+                      readOnly: true,
+                      onTap: selectAudio,
+                    ),
+
+              selectedAudio != null
+                  ? Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: removeAudio,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Pallete.transparentColor,
+                                shadowColor: Pallete.transparentColor,
+                              ),
+                              child: Text(
+                                'Remove Audio',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Pallete.gradient2,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: changeAudio,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Pallete.transparentColor,
+                                shadowColor: Pallete.transparentColor,
+                              ),
+                              child: Text(
+                                'Change Audio',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Pallete.gradient2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : Container(),
+
               SizedBox(height: 20),
               CustomField(
                 hintText: 'Artist Name',

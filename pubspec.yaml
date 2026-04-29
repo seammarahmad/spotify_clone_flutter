@@ -48,6 +48,11 @@ dependencies:
   riverpod: ^3.2.1
   animated_text_kit: ^4.3.0
   lottie: ^3.3.3
+  file_picker: ^11.0.2
+  audio_waveforms: ^2.0.2
+  just_waveform: ^0.0.7
+  rxdart: ^0.28.0
+  just_audio: ^0.10.5
 
 dev_dependencies:
   flutter_test:
