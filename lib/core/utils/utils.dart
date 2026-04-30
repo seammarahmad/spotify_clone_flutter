@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -18,36 +17,43 @@ void showSnackBar(BuildContext context, String content) {
   );
 }
 
-Future<File?> pickAudio() async{
-  try{
-    final filePicker=await FilePicker.pickFiles(
+Future<File?> pickAudio() async {
+  try {
+    final filePicker = await FilePicker.pickFiles(
       type: FileType.custom,
 
       allowedExtensions: ['mp3', 'wav', 'm4a'],
-      allowMultiple: false
-    ) ;
-    if(filePicker!=null){
+      allowMultiple: false,
+    );
+    if (filePicker != null) {
       return File(filePicker.files.first.xFile.path);
     }
     return null;
-  }catch(e){
+  } catch (e) {
     return null;
   }
 }
 
-
-Future<File?> pickImage() async{
-  try{
-    final filePicker=await FilePicker.pickFiles(
-        type: FileType.custom,
+Future<File?> pickImage() async {
+  try {
+    final filePicker = await FilePicker.pickFiles(
+      type: FileType.custom,
       allowedExtensions: ['jpg', 'jpeg', 'png', 'webp'],
-      allowMultiple: false
-    ) ;
-    if(filePicker!=null){
+      allowMultiple: false,
+    );
+    if (filePicker != null) {
       return File(filePicker.files.first.xFile.path);
     }
     return null;
-  }catch(e){
+  } catch (e) {
     return null;
   }
+}
+
+String rgbtoHex(Color color) {
+  return '${color.red.toRadixString(16).padLeft(2, '0')}${color.green.toRadixString(16).padLeft(2, '0')}${color.blue.toRadixString(16).padLeft(2, '0')}';
+}
+
+Color hextoColor(String hex) {
+  return Color(int.parse(hex, radix: 16) + 0xFF000000);
 }

@@ -53,7 +53,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         data: (data) {
           showSnackBar(context, 'Login Succesfully');
 
-          //TODO navigate to home page
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const UploadSongPage()),
@@ -61,24 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           );
         },
         error: (error, st) {
-          showSnackBar(context, error.toString());
-        },
-        loading: () {},
-      );
-    });
-    ref.listen(authViewModelProvider, (_, next) {
-      next?.when(
-        data: (data) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text('Login Successfully')));
-        },
-        error: (error, st) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text('Account Not Found in the database')),
-            );
+          showSnackBar(context, 'Account not found in the Data base');
         },
         loading: () {},
       );

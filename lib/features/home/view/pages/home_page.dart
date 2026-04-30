@@ -8,7 +8,8 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
+    print(user!.token);
 
-    return Scaffold(body: Text(user!.email));
+    return Scaffold(body: Text(user!.token));
   }
 }
