@@ -6,7 +6,7 @@ import 'package:spotify_clone_flutter/core/provider/current_user_notifier.dart';
 import 'package:spotify_clone_flutter/core/theme/app_pallete.dart';
 import 'package:spotify_clone_flutter/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:spotify_clone_flutter/features/auth/view/pages/signup_page.dart';
-import 'package:spotify_clone_flutter/features/home/view/pages/upload_song_page.dart';
+import 'package:spotify_clone_flutter/features/home/view/pages/home_page.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -41,7 +41,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const UploadSongPage()),
+        MaterialPageRoute(builder: (_) => const HomePage()),
       );
     }
   }
