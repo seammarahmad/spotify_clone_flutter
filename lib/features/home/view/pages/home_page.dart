@@ -5,6 +5,8 @@ import 'package:spotify_clone_flutter/core/theme/app_pallete.dart';
 import 'package:spotify_clone_flutter/features/home/view/pages/library_page.dart';
 import 'package:spotify_clone_flutter/features/home/view/pages/song_page.dart';
 
+import '../widgets/music_slab.dart';
+
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -19,7 +21,12 @@ class HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[selectedindex],
+      body: Stack(
+        children: [
+          pages[selectedindex],
+          Positioned(bottom: 0,child: MusicSlab(),),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedindex,
         onTap: (value) {

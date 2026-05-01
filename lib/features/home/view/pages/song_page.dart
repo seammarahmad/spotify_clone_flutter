@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotify_clone_flutter/core/theme/app_pallete.dart';
 import 'package:spotify_clone_flutter/core/utils/loader.dart';
 import 'package:spotify_clone_flutter/features/home/viewmodel/home_viewmodel.dart';
 
@@ -104,7 +105,7 @@ class _SongCard extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey[400],
+                  color: Pallete.subtitleText,
                   overflow: TextOverflow.ellipsis,
                 ),
                 maxLines: 1,
