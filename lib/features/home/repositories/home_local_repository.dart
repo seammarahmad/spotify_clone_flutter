@@ -11,28 +11,50 @@ HomeLocalRepository homeLocalRepository(Ref ref) {
 }
 
 class HomeLocalRepository {
-  final Box<SongModel> box = Hive.box<SongModel>('songs');
+  final Box<String> box = Hive.box<String>('songs');
+
 
   Future<void> uploadLocalSong(SongModel song) async {
     await box.put(song.id, song.toJson());
   }
 
+
   List<SongModel> loadSongs() {
     List<SongModel> songs = [];
     for (final key in box.keys) {
-      songs.add(SongModel.fromJson(box.get(key) as String));
+      final json = box.get(key);
+      if (json != null) {
+        songs.add(SongModel.fromJson(json));
+      }
     }
     return songs;
   }
+  bool songExists(String id) {
+    return box.containsKey(id);
+  }
+
+
+  SongModel? getSong(String id) {
+    final json = box.get(id);
+    if (json == null) return null;
+    return SongModel.fromJson(json);
+  }
+
+  Future<void> updateSong(SongModel song) async {
+    if (box.containsKey(song.id)) {
+      await box.put(song.id, song.toJson());
+    }
+  }
+
+
   Future<void> deleteSong(String id) async {
     await box.delete(id);
   }
 
-  SongModel? getSong(String id) {
-    return box.get(id);
-  }
 
   Future<void> clearAll() async {
     await box.clear();
   }
+
+  int get songCount => box.length;
 }

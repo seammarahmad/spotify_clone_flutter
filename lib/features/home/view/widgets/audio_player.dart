@@ -7,6 +7,7 @@ import 'package:spotify_clone_flutter/core/provider/current_user_notifier.dart';
 import 'package:spotify_clone_flutter/core/utils/utils.dart';
 
 import '../../../../core/theme/app_pallete.dart';
+import '../../viewmodel/home_viewmodel.dart';
 
 class MusicPlayer extends ConsumerWidget {
   const MusicPlayer({super.key});
@@ -102,11 +103,9 @@ class MusicPlayer extends ConsumerWidget {
                       const Expanded(child: SizedBox()),
                       IconButton(
                         onPressed: () async {
-                          // await ref
-                          //     .read(homeViewmodelProvider.notifier)
-                          //     .favSong(
-                          //   songId: currentSong.id,
-                          // );
+                          await ref
+                              .read(homeViewmodelProvider.notifier)
+                              .favSong(songId: currentSong.id);
                         },
                         icon: Icon(
                           userFavorites
@@ -138,30 +137,33 @@ class MusicPlayer extends ConsumerWidget {
                       return Column(
                         children: [
                           StatefulBuilder(
-                            builder: (BuildContext context, void Function(void Function()) setState) {
-                              return SliderTheme(
-                                data: SliderTheme.of(context).copyWith(
-                                  activeTrackColor: Pallete.whiteColor,
-                                  inactiveTrackColor: Pallete.whiteColor
-                                      .withOpacity(0.117),
-                                  thumbColor: Pallete.whiteColor,
-                                  trackHeight: 4,
-                                  overlayShape: SliderComponentShape.noOverlay,
-                                ),
-                                child: Slider(
-                                  value: sliderValue,
-                                  min: 0,
-                                  max: 1,
-                                  onChanged: (val) {
-                                    sliderValue = val;
-                                    setState(() {
-
-                                    });
-                                  },
-                                  onChangeEnd: songNotifier.seek,
-                                ),
-                              );
-                            },
+                            builder:
+                                (
+                                  BuildContext context,
+                                  void Function(void Function()) setState,
+                                ) {
+                                  return SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      activeTrackColor: Pallete.whiteColor,
+                                      inactiveTrackColor: Pallete.whiteColor
+                                          .withOpacity(0.117),
+                                      thumbColor: Pallete.whiteColor,
+                                      trackHeight: 4,
+                                      overlayShape:
+                                          SliderComponentShape.noOverlay,
+                                    ),
+                                    child: Slider(
+                                      value: sliderValue,
+                                      min: 0,
+                                      max: 1,
+                                      onChanged: (val) {
+                                        sliderValue = val;
+                                        setState(() {});
+                                      },
+                                      onChangeEnd: songNotifier.seek,
+                                    ),
+                                  );
+                                },
                           ),
                           Row(
                             children: [
