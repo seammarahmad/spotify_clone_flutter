@@ -57,3 +57,10 @@ String rgbtoHex(Color color) {
 Color hextoColor(String hex) {
   return Color(int.parse(hex, radix: 16) + 0xFF000000);
 }
+
+String formattingDuration(Duration? d) {
+  if (d == null) return '0:00';
+  final minutes = d.inMinutes;
+  final seconds = d.inSeconds % 60;
+  return '$minutes:${seconds.toString().padLeft(2, '0')}';
+}

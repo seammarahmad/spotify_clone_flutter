@@ -7,7 +7,6 @@ import 'package:spotify_clone_flutter/core/constants/custom_field.dart';
 import 'package:spotify_clone_flutter/core/theme/app_pallete.dart';
 import 'package:spotify_clone_flutter/core/utils/loader.dart';
 import 'package:spotify_clone_flutter/core/utils/utils.dart';
-import 'package:spotify_clone_flutter/features/home/repositories/home_repository.dart';
 import 'package:spotify_clone_flutter/features/home/view/pages/home_page.dart';
 import 'package:spotify_clone_flutter/features/home/view/widgets/audio_wave.dart';
 import 'package:spotify_clone_flutter/features/home/viewmodel/home_viewmodel.dart';

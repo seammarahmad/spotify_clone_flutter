@@ -40,6 +40,7 @@ class AuthViewModel extends _$AuthViewModel {
       ),
       Right(value: final r) => state = AsyncValue.data(r),
     };
+    print(val);
   }
 
   Future<void> loginUser({
@@ -57,6 +58,7 @@ class AuthViewModel extends _$AuthViewModel {
       ),
       Right(value: final r) => _loginSuccess(r),
     };
+    print (val);
   }
 
   Future<UserModel?> getData() async {

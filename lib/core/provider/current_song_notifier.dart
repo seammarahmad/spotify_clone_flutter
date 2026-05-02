@@ -24,15 +24,14 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
 
     await audioPlayer!.setAudioSource(audioSource);
 
-    audioPlayer!.playerStateStream.listen((stated){
-      if(stated.processingState==ProcessingState.completed){
+    audioPlayer!.playerStateStream.listen((stated) {
+      if (stated.processingState == ProcessingState.completed) {
         audioPlayer!.seek(Duration.zero);
-        isPlaying=false;
+        isPlaying = false;
         audioPlayer!.pause();
 
         state = state?.copyWith(hex_code: state?.hex_code);
       }
-
     });
 
     audioPlayer!.play();
@@ -51,5 +50,13 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
     isPlaying = !isPlaying;
 
     state = state?.copyWith(hex_code: state?.hex_code);
+  }
+
+  void seek(double val) {
+    audioPlayer!.seek(
+      Duration(
+        milliseconds: (val * audioPlayer!.duration!.inMilliseconds).toInt(),
+      ),
+    );
   }
 }

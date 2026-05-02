@@ -7,7 +7,6 @@ import 'package:spotify_clone_flutter/core/utils/utils.dart';
 import 'package:spotify_clone_flutter/features/home/repositories/home_repository.dart';
 
 import '../model/song_model.dart';
-import 'home_viewmodel.dart';
 
 part 'home_viewmodel.g.dart';
 
