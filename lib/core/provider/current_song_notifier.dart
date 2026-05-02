@@ -1,6 +1,9 @@
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spotify_clone_flutter/features/home/model/song_model.dart';
+
+import '../../features/home/repositories/home_local_repository.dart';
 
 part 'current_song_notifier.g.dart';
 
@@ -8,9 +11,11 @@ part 'current_song_notifier.g.dart';
 class CurrentSongNotifier extends _$CurrentSongNotifier {
   AudioPlayer? audioPlayer;
   bool isPlaying = false;
+  late HomeLocalRepository _homeLocalRepository;
 
   @override
   SongModel? build() {
+    _homeLocalRepository = ref.watch(homeLocalRepositoryProvider);
     return null;
   }
 
@@ -20,7 +25,15 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
 
     audioPlayer = AudioPlayer();
 
-    final audioSource = AudioSource.uri(Uri.parse(song.song_url));
+    final audioSource = AudioSource.uri(
+      Uri.parse(song.song_url),
+      tag: MediaItem(
+        id: song.id,
+        title: song.song_name,
+        artist: song.artist,
+        artUri: Uri.parse(song.thumbnail_url),
+      ),
+    );
 
     await audioPlayer!.setAudioSource(audioSource);
 
@@ -33,6 +46,8 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
         state = state?.copyWith(hex_code: state?.hex_code);
       }
     });
+
+    _homeLocalRepository.uploadLocalSong(song);
 
     audioPlayer!.play();
     isPlaying = true;
