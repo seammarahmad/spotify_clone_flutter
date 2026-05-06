@@ -13,8 +13,6 @@ import 'package:spotify_clone_flutter/features/home/repositories/home_repository
 
 part 'home_viewmodel.g.dart';
 
-// ─── Get All Songs Provider ──────────────────────────────────────────────────
-
 @riverpod
 Future<List<SongModel>> getAllSongs(Ref ref) async {
   final token = ref.watch(currentUserProvider)!.token;
@@ -25,8 +23,6 @@ Future<List<SongModel>> getAllSongs(Ref ref) async {
     Right(value: final r) => r,
   };
 }
-
-// ─── Get All Favourite Songs Provider ───────────────────────────────────────
 
 @riverpod
 Future<List<SongModel>> getAllFavSongs(Ref ref) async {
@@ -39,8 +35,6 @@ Future<List<SongModel>> getAllFavSongs(Ref ref) async {
   };
 }
 
-// ─── Home Viewmodel ──────────────────────────────────────────────────────────
-
 @riverpod
 class HomeViewmodel extends _$HomeViewmodel {
   late HomeRepository _homeRepository;
@@ -52,8 +46,6 @@ class HomeViewmodel extends _$HomeViewmodel {
     _homeLocalRepository = ref.watch(homeLocalRepositoryProvider);
     return null;
   }
-
-  // ─── Upload Song ─────────────────────────────────────────────────────────
 
   Future<void> uploadSong({
     required File selectedAudio,
@@ -85,16 +77,11 @@ class HomeViewmodel extends _$HomeViewmodel {
     print(val);
   }
 
-  // ─── Recently Played Songs ────────────────────────────────────────────────
-
   List<SongModel> getrecentlyPlayedSong() {
     return _homeLocalRepository.loadSongs();
   }
 
-  // ─── Favourite Song ───────────────────────────────────────────────────────
-
   Future<void> favSong({required String songId}) async {
-    // ✅ Step 1: Optimistic update — update UI instantly before server responds
     _toggleFavOptimistically(songId);
 
     final res = await _homeRepository.favSong(
@@ -106,16 +93,12 @@ class HomeViewmodel extends _$HomeViewmodel {
 
     switch (res) {
       case Left(value: final l):
-        // ✅ Step 2a: Server failed — revert the optimistic update
         _toggleFavOptimistically(songId);
         state = AsyncValue.error(l.message, StackTrace.current);
       case Right(value: _):
-        // ✅ Step 2b: Server confirmed — refresh library silently in background
         ref.invalidate(getAllFavSongsProvider);
     }
   }
-
-  // ─── Optimistic Toggle (no server call) ──────────────────────────────────
 
   void _toggleFavOptimistically(String songId) {
     if (!ref.mounted) return;
@@ -128,9 +111,7 @@ class HomeViewmodel extends _$HomeViewmodel {
     );
 
     final updatedFavorites = alreadyFav
-        // Remove it
         ? currentUser.favorites.where((fav) => fav.song_id != songId).toList()
-        // Add it
         : [
             ...currentUser.favorites,
             FavSongModel(id: '', song_id: songId, user_id: ''),

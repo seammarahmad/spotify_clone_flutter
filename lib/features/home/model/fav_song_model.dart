@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
 
 class FavSongModel {
@@ -11,11 +10,7 @@ class FavSongModel {
     required this.user_id,
   });
 
-  FavSongModel copyWith({
-    String? id,
-    String? song_id,
-    String? user_id,
-  }) {
+  FavSongModel copyWith({String? id, String? song_id, String? user_id}) {
     return FavSongModel(
       id: id ?? this.id,
       song_id: song_id ?? this.song_id,
@@ -24,11 +19,7 @@ class FavSongModel {
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'song_id': song_id,
-      'user_id': user_id,
-    };
+    return <String, dynamic>{'id': id, 'song_id': song_id, 'user_id': user_id};
   }
 
   factory FavSongModel.fromMap(Map<String, dynamic> map) {
